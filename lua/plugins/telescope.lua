@@ -26,6 +26,17 @@ return { -- Fuzzy Finder (files, lsp, etc)
 					require("telescope.themes").get_dropdown(),
 				},
 			},
+			defaults = {
+				layout_strategy = 'horizontal',
+				layout_config = {
+					preview_width = 0.6,
+					vertical = { width = 0.99, height = 0.99  },
+					horizontal = { width = 0.99, height = 0.99 },
+					-- other layout configuration here
+				},
+				-- other defaults configuration here
+			},
+			-- other configuration values here
 		})
 
 		-- Enable Telescope extensions if they are installed
@@ -44,7 +55,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
 		vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
 		vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
 		vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
-		vim.keymap.set("n", "<leader>o", builtin.colorscheme, { desc = 'c[O]lorscheme' })
+		vim.keymap.set("n", "<leader>o", builtin.colorscheme, { desc = "c[O]lorscheme" })
 
 		-- Slightly advanced example of overriding default behavior and theme
 		vim.keymap.set("n", "<leader>/", function()

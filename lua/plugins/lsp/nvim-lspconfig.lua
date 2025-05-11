@@ -67,6 +67,7 @@ return {
 			-- jdtls = {},
 			pyright = {},
 			ts_ls = {},
+			html = {},
 			lua_ls = {
 				-- cmd = {...},
 				-- filetypes = { ...},

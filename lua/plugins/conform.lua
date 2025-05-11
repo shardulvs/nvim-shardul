@@ -54,10 +54,10 @@ return { -- Autoformat
 			cpp = { "loclang-format" },
 			java = { "clang-format" }, -- Conform can also run multiple formatters sequentially
 			python = { "isort", "black" }, -- You can use 'stop_after_first' to run the first available formatter from the list
-			html = { "htmlbeautifier" },
+			html = { "prettier" },
 			markdown = { "markdownlint", "cbfmt" },
-			javascript = {"prettier"},
-			json = {"fixjson"}
+			javascript = { "prettier" },
+			json = { "fixjson" },
 		},
 	},
 }
