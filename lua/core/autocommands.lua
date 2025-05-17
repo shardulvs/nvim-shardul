@@ -22,3 +22,10 @@ vim.api.nvim_create_autocmd("User", {
     end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "netrw",
+  callback = function()
+    vim.keymap.set("n", "ma", "<Cmd>BookmarkShowAll<CR>", { buffer = true, noremap = true, silent = true })
+  end,
+})
+

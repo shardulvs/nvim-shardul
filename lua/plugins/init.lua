@@ -44,7 +44,10 @@ require("lazy").setup({
 			vim.g.matchup_matchparen_offscreen = { method = "popup" } -- Show offscreen matches in a popup
 		end,
 	},
-	require("plugins.dev")
+	-- require("plugins.dev")
+	require("plugins.harpoon"),
+	require("plugins.vim-bookmarks"),
+	'jbyuki/venn.nvim'
 }, {
 	ui = {
 		-- If you are using a Nerd Font: set icons to an empty table which will use the
