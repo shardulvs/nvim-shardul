@@ -64,17 +64,16 @@ function BlockDelete()
     end
     vim.fn.setreg("z", regcontents, "b")
     BlockPaste("z", false)
-    vim.cmd([[%s/\s\+$//e]])
 end
 
 vim.keymap.set(
     "x", -- visual‑mode
-    "<leader>bd", -- trigger
+    "<leader>x", -- trigger
     "y<Cmd>lua BlockDelete()<CR>", -- exit visual, then Lua
     { desc = "Block Delete" }
 )
 
-vim.keymap.set("n", "<leader>bp", function()
+vim.keymap.set("n", "<leader>p", function()
     BlockPaste('"', true)
 end, { desc = "Block Paste" })
 
@@ -116,5 +115,6 @@ function BlockPaste(regname, ignore_spaces)
             end
         end
     end
+    vim.cmd([[%s/\s\+$//e]])
     vim.api.nvim_win_set_cursor(buf, { row, orig_col + off - 1 })
 end
