@@ -52,161 +52,109 @@ vim.keymap.set("n", "<Leader>ve", function()
 	end
 end, { desc = "Toggle virtualedit=all" })
 
-vim.keymap.set("n", "<leader>p", function()
-	-- 1) Grab the current default‑register contents into a Lua table
-	local reg = vim.fn.getreg('"', 1, true)
-	if type(reg) ~= "table" or vim.tbl_isempty(reg) then
-		print("Nothing in register to paste")
-		return
-	end
-
-	-- 2) Compute block height & width
-	local height = #reg
-	local width = 0
-	for _, line in ipairs(reg) do
-		local w = vim.fn.strdisplaywidth(line)
-		if w > width then
-			width = w
-		end
-	end
-
-	-- 3) Mark the cursor start position in buffer (mark 'Z')
-	local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-	-- buf_set_mark: (bufnr, name, line, col, opts), col is 0‑indexed
-	vim.api.nvim_buf_set_mark(0, "Z", row, col, {})
-
-	-- 4) Enter Visual‑Block, stretch to our computed size, and paste (synchronously)
-	local vblock = vim.api.nvim_replace_termcodes("<C-v>", true, false, true)
-	vim.api.nvim_feedkeys(vblock, "n", false)
-	local right = (width > 1) and string.rep("l", width - 1) or ""
-	local down = (height > 1) and string.rep("j", height - 1) or ""
-	vim.api.nvim_feedkeys(right .. down, "n", false)
-	-- 'x' mode: execute paste before moving on
-	vim.api.nvim_feedkeys("p", "x", false)
-
-	-- 5) Cleanup trailing whitespace in the whole buffer
-	--    (use :% so you don’t need any delay or guessing)
-	vim.cmd([[%s/\s\+$//e]])
-
-	-- 6) Go back to our mark, re‑select the same block, and yank it back
-	local mpos = vim.api.nvim_buf_get_mark(0, "Z")
-	vim.api.nvim_win_set_cursor(0, { mpos[1], mpos[2] })
-	vim.api.nvim_feedkeys(vblock, "n", false)
-	vim.api.nvim_feedkeys(right .. down, "n", false)
-	vim.api.nvim_feedkeys("y", "x", false)
-end, { desc = "Smart block‑paste + cleanup + restore register" })
-
---
--- Transparent block‑paste: non‑space chars only overwrite
---
-vim.keymap.set("n", "<leader>bp", function()
-	-- 1) pull the default register into Lua
-	local reg = vim.fn.getreg('"', 1, true)
-	if type(reg) ~= "table" or vim.tbl_isempty(reg) then
-		print("Nothing in register to paste")
-		return
-	end
-
-	-- 2) compute block size
-	local height = #reg
-	local width = 0
-	for _, line in ipairs(reg) do
-		if #line > width then
-			width = #line
-		end
-	end
-
-	-- 3) get cursor row, col (1‑indexed row; 0‑indexed col)
-	local row, col0 = unpack(vim.api.nvim_win_get_cursor(0))
-	local start_row = row - 1
-	local start_col = col0
-
-	-- 4) for each line of the block:
-	for i = 1, height do
-		local src = reg[i]
-		-- pad src to full width
-		if #src < width then
-			src = src .. string.rep(" ", width - #src)
-		end
-
-		-- grab exactly that line from buffer
-		local buf_line = vim.api.nvim_buf_get_lines(0, start_row + i - 1, start_row + i, false)[1]
-		-- ensure buffer line is long enough
-		if #buf_line < start_col + width then
-			buf_line = buf_line .. string.rep(" ", start_col + width - #buf_line)
-		end
-
-		-- build the new line by selectively overwriting
-		local new_line = {}
-		-- prefix (before block)
-		new_line[1] = buf_line:sub(1, start_col)
-		-- the block region
-		local middle = {}
-		for j = 1, width do
-			local c = src:sub(j, j)
-			if c ~= " " then
-				middle[j] = c
-			else
-				middle[j] = buf_line:sub(start_col + j, start_col + j)
-			end
-		end
-		new_line[2] = table.concat(middle)
-		-- suffix (after block)
-		new_line[3] = buf_line:sub(start_col + width + 1)
-
-		-- write it back
-		vim.api.nvim_buf_set_lines(
-			0,
-			start_row + i - 1,
-			start_row + i,
-			false,
-			{ new_line[1] .. new_line[2] .. new_line[3] }
-		)
-	end
-
-	-- 5) re‑store the register so we don’t clobber your yanked block
-	--    (note: getreg/setreg expect a string or a table of lines)
-	vim.fn.setreg('"', reg, "c")
-end, { desc = "Transparent block‑paste (skip spaces)" })
-
-
-
-
-
 -- block_delete.lua
 
--- 1) Define the function
 function block_delete()
-  local buf = vim.api.nvim_get_current_buf()
+	local reginfo = vim.fn.getreginfo('"')
+  local regcont = reginfo.regcontents
+	local width = vim.fn.strchars(regcont[1] or "")
+	local height = #regcont
 
-  -- get the two corners of the visual selection
-  local start_mark = vim.api.nvim_buf_get_mark(buf, '<')
-  local end_mark   = vim.api.nvim_buf_get_mark(buf, '>')
+	-- 4) Generate a block of spaces:
+	local spaces = string.rep(" ", width)
+	local regcontents = {}
+	for i = 1, height do
+		regcontents[i] = spaces
+	end
 
-  -- convert to 0‑indexed row/col
-  local sl, sc = start_mark[1] - 1, start_mark[2] - 1
-  local el, ec = end_mark[1]   - 1, end_mark[2]   - 1
+	-- 5) Set named register "z" as a blockwise register:
+	vim.fn.setreg("z", regcontents, "b")
 
-  -- normalize (in case of reverse selection)
-  if sl > el then sl, el = el, sl end
-  if sc > ec then sc, ec = ec, sc end
-
-  -- replace each line’s slice [sc..ec] with spaces
-  for row = sl, el do
-    local line = vim.api.nvim_buf_get_lines(buf, row, row+1, false)[1]
-    local width = ec - sc + 1
-    local spaces = string.rep(' ', width)
-    local new_line = line:sub(1, sc+1) .. spaces .. line:sub(ec + 3)
-    vim.api.nvim_buf_set_lines(buf, row, row+1, false, { new_line })
-  end
+	-- 6) Call your custom block paste logic using "z":
+	vim.cmd('lua block_paste("z")')
 end
 
--- 2) Map it in Visual mode, but first exit Visual (`<Esc>`), then run
 vim.keymap.set(
-  'x',                   -- visual‑mode
-  '<leader>bd',          -- trigger
-  '<Esc><Cmd>lua block_delete()<CR>',  -- exit visual, then Lua
-  { desc = "Block‑delete (replace block with spaces)" }
+	"x", -- visual‑mode
+	"<leader>bd", -- trigger
+	"y<Cmd>lua block_delete()<CR>", -- exit visual, then Lua
+	{ desc = "Block‑delete (replace block with spaces)" }
 )
 
+vim.keymap.set("n", "<leader>bp", function()
+	local reginfo = vim.fn.getreginfo('"')
+	local regcontents = reginfo.regcontents
+	local pos = vim.fn.getcurpos()
+	local row = pos[2] -- line number
+	local col = pos[3] -- column number of last character + 1 (1 for empty line)
+	local off = pos[4] -- column number of caret - column number of last character - 1 (column number of caret - pos[3])
+	local current_line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1] or ""
+	local real_col = vim.str_utfindex(current_line, col - 1) + 1
+	-- vim.notify("difference of " .. (col - real_col))
+	local orig_col = col
+	col = real_col
+	local caret = col + off -- column number of caret
+	local buf = 0 -- current buffer
 
+	for i, line in ipairs(regcontents) do
+		local target_row = row - 1 + (i - 1)
+		local line_chars = vim.fn.strchars(line)
+		for j = 0, line_chars - 1 do
+			local existing_line = vim.api.nvim_buf_get_lines(buf, target_row, target_row + 1, false)[1] or ""
+			local target_col = caret + (j - 1) -- the column just after which next character is going to be put
+			local line_len = vim.fn.strchars(existing_line)
+			local char = vim.fn.strcharpart(line, j, 1)
+			-- Pad with spaces if needed
+			if char ~= " " then
+				if target_col >= line_len then
+					local pad_len = target_col - line_len + 1
+					local pad = string.rep(" ", pad_len)
+					existing_line = existing_line .. pad
+					vim.api.nvim_buf_set_lines(buf, target_row, target_row + 1, false, { existing_line })
+				end
+				-- Replace 1 character
+				local byte_start = vim.fn.byteidx(existing_line, target_col)
+				vim.api.nvim_buf_set_text(buf, target_row, byte_start, target_row, byte_start + 1, { char })
+			end
+		end
+	end
+	vim.api.nvim_win_set_cursor(buf, { row, orig_col + off - 1 })
+end, { desc = "Block Paste" })
+
+function block_paste(regname)
+	local reginfo = vim.fn.getreginfo(regname)
+	local regcontents = reginfo.regcontents
+	local pos = vim.fn.getcurpos()
+	local row = pos[2] -- line number
+	local col = pos[3] -- column number of last character + 1 (1 for empty line)
+	local off = pos[4] -- column number of caret - column number of last character - 1 (column number of caret - pos[3])
+	local current_line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1] or ""
+	local real_col = vim.str_utfindex(current_line, col - 1) + 1
+	-- vim.notify("difference of " .. (col - real_col))
+	local orig_col = col
+	col = real_col
+	local caret = col + off -- column number of caret
+	local buf = 0 -- current buffer
+
+	for i, line in ipairs(regcontents) do
+		local target_row = row - 1 + (i - 1)
+		local line_chars = vim.fn.strchars(line)
+		for j = 0, line_chars - 1 do
+			local existing_line = vim.api.nvim_buf_get_lines(buf, target_row, target_row + 1, false)[1] or ""
+			local target_col = caret + (j - 1) -- the column just after which next character is going to be put
+			local line_len = vim.fn.strchars(existing_line)
+			local char = vim.fn.strcharpart(line, j, 1)
+			-- Pad with spaces if needed
+			if target_col >= line_len then
+				local pad_len = target_col - line_len + 1
+				local pad = string.rep(" ", pad_len)
+				existing_line = existing_line .. pad
+				vim.api.nvim_buf_set_lines(buf, target_row, target_row + 1, false, { existing_line })
+			end
+			-- Replace 1 character
+			local byte_start = vim.fn.byteidx(existing_line, target_col)
+			vim.api.nvim_buf_set_text(buf, target_row, byte_start, target_row, byte_start + 1, { char })
+		end
+	end
+	vim.api.nvim_win_set_cursor(buf, { row, orig_col + off - 1 })
+end
