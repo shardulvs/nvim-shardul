@@ -6,7 +6,7 @@ vim.g.mapleader = " " --  Must happen before plugins are loaded (otherwise wrong
 vim.g.maplocalleader = " "
 vim.g.have_nerd_font = false -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.opt.number = true -- Make line numbers default
-vim.opt.relativenumber = false
+vim.opt.relativenumber = true
 vim.opt.mouse = "a" -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.showmode = false -- Don't show the mode, since it's already in the status line
 

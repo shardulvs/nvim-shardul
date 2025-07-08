@@ -29,9 +29,8 @@ return { -- Fuzzy Finder (files, lsp, etc)
 			defaults = {
 				layout_strategy = 'horizontal',
 				layout_config = {
-					preview_width = 0.6,
 					vertical = { width = 0.99, height = 0.99  },
-					horizontal = { width = 0.99, height = 0.99 },
+					horizontal = { width = 0.99, height = 0.99, preview_width = 0.6 },
 					-- other layout configuration here
 				},
 				-- other defaults configuration here

@@ -118,3 +118,12 @@ function BlockPaste(regname, ignore_spaces)
     vim.cmd([[%s/\s\+$//e]])
     vim.api.nvim_win_set_cursor(buf, { row, orig_col + off - 1 })
 end
+
+vim.keymap.set('n', '<leader>y', function()
+  local filename = vim.fn.expand('%:t')
+  local line = vim.fn.line('.')
+  local result = filename .. ':' .. line
+  vim.fn.setreg('+', result)  -- Copy to system clipboard
+  print('Copied to clipboard: ' .. result)
+end, { desc = 'Copy filename:line to clipboard' })
+
