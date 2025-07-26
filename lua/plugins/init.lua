@@ -47,7 +47,8 @@ require("lazy").setup({
 	-- require("plugins.dev")
 	require("plugins.harpoon"),
 	require("plugins.vim-bookmarks"),
-	'jbyuki/venn.nvim'
+	'jbyuki/venn.nvim',
+	require("plugins.leetcode")
 }, {
 	ui = {
 		-- If you are using a Nerd Font: set icons to an empty table which will use the
