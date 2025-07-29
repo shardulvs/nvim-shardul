@@ -127,3 +127,14 @@ vim.keymap.set('n', '<leader>y', function()
   print('Copied to clipboard: ' .. result)
 end, { desc = 'Copy filename:line to clipboard' })
 
+-- Keymap: Open the current file in a new tab and move the cursor to the same line number
+vim.keymap.set('n', '<leader>tn', function()
+  local file = vim.api.nvim_buf_get_name(0)
+  local line = vim.api.nvim_win_get_cursor(0)[1]
+
+  -- Open a new tab and edit the same file
+  vim.cmd('tabnew ' .. file)
+
+  -- Move the cursor to the same line
+  vim.api.nvim_win_set_cursor(0, { line, 0 })
+end, { desc = 'Open current file in new tab at same line number' })
