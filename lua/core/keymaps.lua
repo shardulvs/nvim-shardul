@@ -3,10 +3,17 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
-vim.keymap.set("n", "<C-j>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-k>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set("n", "<C-h>", ":vertical resize -2<CR>", { silent = true, desc = "Resize window vertically (-2)" })
-vim.keymap.set("n", "<C-l>", ":vertical resize +2<CR>", { silent = true, desc = "Resize window vertically (+2)" })
+-- Move focus between windows using Ctrl + h/j/k/l
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the window below" })
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the window above" })
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+
+-- Continuous resize splits with Alt + Arrow keys
+vim.keymap.set("n", "<A-Left>",  ":vertical resize -2<CR>", { silent = true, desc = "Resize window narrower" })
+vim.keymap.set("n", "<A-Right>", ":vertical resize +2<CR>", { silent = true, desc = "Resize window wider" })
+vim.keymap.set("n", "<A-Up>",    ":resize -2<CR>",          { silent = true, desc = "Resize window shorter" })
+vim.keymap.set("n", "<A-Down>",  ":resize +2<CR>",          { silent = true, desc = "Resize window taller" })
 
 local function get_current_function()
     local node = vim.treesitter.get_node()
