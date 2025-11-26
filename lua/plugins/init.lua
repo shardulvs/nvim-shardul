@@ -16,7 +16,7 @@ require("lazy").setup({
 	require("plugins.carbon-now"),
 	require("plugins.kommentary"),
 	"ThePrimeagen/vim-be-good",
-	require("plugins.neoscroll"),
+	-- require("plugins.neoscroll"),
 	require("plugins.gitsigns"),
 	require("plugins.which-key"),
 	require("plugins.telescope"),
