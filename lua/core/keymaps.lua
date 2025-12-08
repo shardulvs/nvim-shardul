@@ -15,6 +15,12 @@ vim.keymap.set("n", "<A-Right>", ":vertical resize +2<CR>", { silent = true, des
 vim.keymap.set("n", "<A-Up>",    ":resize -2<CR>",          { silent = true, desc = "Resize window shorter" })
 vim.keymap.set("n", "<A-Down>",  ":resize +2<CR>",          { silent = true, desc = "Resize window taller" })
 
+-- Move tab one left
+vim.keymap.set('n', '<C-S-PageUp>', ':tabmove -1<CR>', { silent = true })
+
+-- Move tab one right
+vim.keymap.set('n', '<C-S-PageDown>', ':tabmove +1<CR>', { silent = true })
+
 local function get_current_function()
     local node = vim.treesitter.get_node()
     while node do

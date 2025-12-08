@@ -27,6 +27,26 @@ return {
 				map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
 				map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
 				map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+				-- New Tab Mappings
+				map("gtd", function()
+						vim.cmd("tab split")
+						require("telescope.builtin").lsp_definitions()
+				end, "[G]oto [T]ab [D]efinition")
+
+				map("gtr", function()
+						vim.cmd("tab split")
+						require("telescope.builtin").lsp_references()
+				end, "[G]oto [T]ab [R]eferences")
+
+				map("gtI", function()
+						vim.cmd("tab split")
+						require("telescope.builtin").lsp_implementations()
+				end, "[G]oto [T]ab [I]mplementation")
+
+				map("gtD", function()
+						vim.cmd("tab split")
+						vim.lsp.buf.declaration()
+				end, "[G]oto [T]ab [D]eclaration")
 
 				local client = vim.lsp.get_client_by_id(event.data.client_id)
 				if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
