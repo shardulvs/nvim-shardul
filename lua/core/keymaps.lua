@@ -1,3 +1,7 @@
+vim.keymap.set("n", "<C-z>", "<nop>")
+vim.keymap.set("i", "<C-z>", "<nop>")
+vim.keymap.set("v", "<C-z>", "<nop>")
+
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open floating window of [E]rror" })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })

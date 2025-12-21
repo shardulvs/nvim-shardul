@@ -11,6 +11,10 @@ vim.opt.rtp:prepend(lazypath)
 --  To check the current status of your plugins, run :Lazy
 --  To update plugins you can run :Lazy update
 require("lazy").setup({
+  {
+		"ytmusic.nvim", -- The name doesn't have to match the directory, but it's good practice
+		dir = "/home/shardulvs/Developement/ytmusic.nvim", -- Absolute path to your plugin's root directory
+  },
 	"norcalli/nvim-colorizer.lua",
 	"tpope/vim-sleuth",
 	require("plugins.carbon-now"),
