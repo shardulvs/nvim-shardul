@@ -17,7 +17,7 @@ require("lazy").setup({
   },
 	"norcalli/nvim-colorizer.lua",
 	"tpope/vim-sleuth",
-	-- require("plugins.ufo");
+	require("plugins.ufo");
 	require("plugins.carbon-now"),
 	require("plugins.kommentary"),
 	"ThePrimeagen/vim-be-good",
@@ -47,6 +47,7 @@ require("lazy").setup({
 		lazy = false, -- Load immediately
 		config = function()
 			vim.g.matchup_matchparen_offscreen = { method = "popup" } -- Show offscreen matches in a popup
+			vim.g.matchup_matchparen_deferred = 1
 		end,
 	},
 	-- require("plugins.dev")
