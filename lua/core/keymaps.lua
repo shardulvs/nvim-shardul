@@ -1,3 +1,6 @@
+vim.keymap.set("n", "<C-Up>",   ":tabprevious<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-Down>", ":tabnext<CR>",     { noremap = true, silent = true })
+
 vim.keymap.set("n", "<C-z>", "<nop>")
 vim.keymap.set("i", "<C-z>", "<nop>")
 vim.keymap.set("v", "<C-z>", "<nop>")
