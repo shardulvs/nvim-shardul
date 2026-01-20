@@ -60,7 +60,7 @@ return { -- Autoformat
             python = { "isort", "black" }, -- You can use 'stop_after_first' to run the first available formatter from the list
             html = { "prettier" },
             htmlangular = { "prettier" },
-            ts = { "prettier" },
+            typescript = { "prettier" },
             markdown = { "markdownlint", "cbfmt" },
             javascript = { "prettier" },
             json = { "prettier" },
