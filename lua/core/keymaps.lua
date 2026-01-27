@@ -10,17 +10,15 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
--- Move focus between windows using Ctrl+Shift+Arrow keys
-vim.keymap.set("n", "<C-S-Left>",  "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-S-Down>",  "<C-w><C-j>", { desc = "Move focus to the window below" })
-vim.keymap.set("n", "<C-S-Up>",    "<C-w><C-k>", { desc = "Move focus to the window above" })
-vim.keymap.set("n", "<C-S-Right>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+vim.keymap.set("n", "<A-Left>",  "<C-w><C-h>", { desc = "Move focus to the left window" })
+vim.keymap.set("n", "<A-Down>",  "<C-w><C-j>", { desc = "Move focus to the window below" })
+vim.keymap.set("n", "<A-Up>",    "<C-w><C-k>", { desc = "Move focus to the window above" })
+vim.keymap.set("n", "<A-Right>", "<C-w><C-l>", { desc = "Move focus to the right window" })
 
--- Continuous resize splits with Alt + Arrow keys
-vim.keymap.set("n", "<A-Left>",  ":vertical resize -2<CR>", { silent = true, desc = "Resize window narrower" })
-vim.keymap.set("n", "<A-Right>", ":vertical resize +2<CR>", { silent = true, desc = "Resize window wider" })
-vim.keymap.set("n", "<A-Up>",    ":resize -2<CR>",          { silent = true, desc = "Resize window shorter" })
-vim.keymap.set("n", "<A-Down>",  ":resize +2<CR>",          { silent = true, desc = "Resize window taller" })
+vim.keymap.set("n", "<S-A-Left>",  ":vertical resize -2<CR>", { silent = true, desc = "Resize window narrower" })
+vim.keymap.set("n", "<S-A-Right>", ":vertical resize +2<CR>", { silent = true, desc = "Resize window wider" })
+vim.keymap.set("n", "<S-A-Up>",    ":resize -2<CR>",          { silent = true, desc = "Resize window shorter" })
+vim.keymap.set("n", "<S-A-Down>",  ":resize +2<CR>",          { silent = true, desc = "Resize window taller" })
 
 -- Move tab one left
 vim.keymap.set('n', '<C-S-PageUp>', ':tabmove -1<CR>', { silent = true })
