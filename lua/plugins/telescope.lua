@@ -33,6 +33,9 @@ return { -- Fuzzy Finder (files, lsp, etc)
 					horizontal = { width = 0.99, height = 0.99, preview_width = 0.6 },
 					-- other layout configuration here
 				},
+				file_ignore_patterns = {
+					"translations"
+				}
 				-- other defaults configuration here
 			},
 			-- other configuration values here
