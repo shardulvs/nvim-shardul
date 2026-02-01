@@ -17,7 +17,8 @@ require("lazy").setup({
   },
 	"norcalli/nvim-colorizer.lua",
 	"tpope/vim-sleuth",
-	require("plugins.ufo");
+	require("plugins.baleia"),
+	require("plugins.ufo"),
 	require("plugins.carbon-now"),
 	require("plugins.kommentary"),
 	"ThePrimeagen/vim-be-good",
