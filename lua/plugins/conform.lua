@@ -61,7 +61,7 @@ return { -- Autoformat
             html = { "prettier" },
             htmlangular = { "prettier" },
             typescript = { "prettier" },
-            markdown = { "markdownlint", "cbfmt" },
+            -- markdown = { "markdownlint", "cbfmt" },
             javascript = { "prettier" },
             json = { "prettier" },
         },

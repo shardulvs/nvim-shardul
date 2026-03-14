@@ -17,6 +17,7 @@ require("lazy").setup({
   },
 	"norcalli/nvim-colorizer.lua",
 	"tpope/vim-sleuth",
+	require("plugins.pdfview"),
 	require("plugins.baleia"),
 	require("plugins.ufo"),
 	require("plugins.carbon-now"),

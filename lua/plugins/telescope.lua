@@ -34,7 +34,8 @@ return { -- Fuzzy Finder (files, lsp, etc)
 					-- other layout configuration here
 				},
 				file_ignore_patterns = {
-					"translations"
+					"translations",
+					"browser/po/"
 				}
 				-- other defaults configuration here
 			},
